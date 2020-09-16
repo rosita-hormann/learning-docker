@@ -1,0 +1,4 @@
+docker run --name db -e POSTGRES_PASSWORD=mysecretpassword -d postgres
+
+docker run -d --name=wordpress --link db:db -p 8085:80 wordpress
+
