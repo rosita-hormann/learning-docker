@@ -23,7 +23,7 @@ docker-compose up
 
 ## Sample applicacion - voting applicacion
 
-First with only docker:
+First with only docker (does not work because they don't share the same network or have not used links):
 
 ```bash
 docker run -d --name=redis redis
@@ -70,11 +70,9 @@ worker:
     - db:db
 ```
 
-Then run 
-docker-compose up
-```bash
-docker-compose up
-```
+Then run : `docker-compose up`
+
+We are assuming the images are already build (because we are using image key instead of build key).
 
 ### Building the app instead of downloading it from a registry:
 ```yaml
@@ -101,9 +99,9 @@ worker:
     - db:db
 
 ```
- Search for dockersamples/example-voting-app and others to run this example
+ Search for dockersamples/example-voting-app on GitHub and others to run this example
 
-## Docker compose - versions
+## Docker compose - VERSIONS
 
 ### version 1:
 
@@ -114,9 +112,11 @@ See examples above.
 
 ### version 2:
 
-**Networking**: Automatically creates a dedicates bridge network for this application and ataches all containers to this network.
+**Networking**: Automatically creates a dedicated bridge network for this application and ataches all containers to this network.
 
 Basically we can get rid of "links" properties.
+
+Also, now services ar ordered inside "services".
 
 docker-compose.yml:
 ```yaml
@@ -161,27 +161,28 @@ services:
     db:
         image: postgres:9.4
     vote:
-        build: ./vote #HERE is the change
+        build: ./vote
         ports:
             - 5000:80
         depends_on:
             - redis
     result:
-        build: ./result #HERE is the change
+        build: ./result
         ports:
             - 5001:80
         depends_on:
             - db
     worker:
-        build: ./worker #HERE is the change
+        build: ./worker
         depends_on:
             - redis
             - db
 ```
 
 ## Networks in docker compose
+
 ```yaml
-version: 3 # this is necessary now
+version: 3
 services:
     redis:
         image: redis
@@ -192,7 +193,7 @@ services:
         networks:
             - back-end
     vote:
-        build: ./vote #HERE is the change
+        build: ./vote 
         ports:
             - 5000:80
         depends_on:
@@ -201,7 +202,7 @@ services:
             - front-end
             - back-end
     result:
-        build: ./result #HERE is the change
+        build: ./result
         ports:
             - 5001:80
         depends_on:
@@ -210,14 +211,13 @@ services:
             - front-end
             - back-end
     worker:
-        build: ./worker #HERE is the change
+        build: ./worker
         depends_on:
             - redis
             - db
         networks:
             - back-end
-networks:
+networks: # Define networks we are going to use (by default they are bridge networks)
     front-end:
     back-end:
 ```
-
