@@ -1,0 +1,26 @@
+version: 3
+services:
+    redis:
+        image: redis
+    db:
+        image: postgres:9,4
+    vote:
+        image: voting-app
+        ports:
+            - 5000:80
+        depends_on:
+            - redis
+    worker:
+        image: worker-app
+        depends_on:
+            - db
+            - redis
+    result:
+        image: result-app
+        ports:
+            - 5001:80
+        depends_on:
+            - db
+# run:
+# docker-compose up
+# you can also add -d option to detached deployment, then make docker-compose logs -f to show logs.
