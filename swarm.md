@@ -26,6 +26,7 @@ An instance of the Docker engine participating in the swarm. --> also known as "
  
 The swarm manager uses ingress load balancing to expose the services you want to make available externally to the swarm.
 
+---
 
 # Container Orchestration
 
@@ -52,8 +53,8 @@ Some options:
 - after joining the swarm, the workers are also referred to as nodes.
 - now you're ready to create services and deploy them on the swarm cluster.
 
-Details:
-- docker swarm orchestrator se encarga de deployar aplicaciones/servicios a lo largo del cluster, en vez de tener que hacer `docker run` en cada nodo manualmente.
-- 
+### more detailed information:
+- **docker swarm orchestrator** se encarga de deployar aplicaciones/servicios a lo largo del cluster, en vez de tener que hacer `docker run` en cada nodo manualmente.
+- **Docker Services**: One or more instances of a single application or service that runs across the site.
 
-
+More things to know: Configuring multiple managers, overlay networks, etc.
