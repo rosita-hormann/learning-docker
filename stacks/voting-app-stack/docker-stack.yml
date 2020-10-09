@@ -1,0 +1,49 @@
+#DEMO
+
+# cd to the directory of this file
+# then run the following command:
+# docker stack deploy voting-app-stack --compose-file docker-stack.yml
+# (voting-app-stack is the name of the stack)
+
+# Once the services are deployed, run:
+# docker service ls
+# docker service ps voting-app-stack_worker
+version: 3 # This version (or greater) is needed for stack configurations.
+services:
+    redis:
+        image: redis
+        deploy:
+            replicas: 1
+            resources:
+                limits:
+                    cpus: 0.01
+                    memory: 50m
+
+    db:
+        image: postgres:9.4
+        deploy:
+            # replicas: 1
+            placement:
+                constraints: # Constraints are like conditions.
+                    - node.hostname == node1 # This makes the application to be deployed only in this node
+                    # - node.role == manager # Another option similar to the one above
+                    # Check documentation for more constraints examples
+
+    vote:
+        image: voting-app
+        ports:
+            - 5000:80
+        deploy:
+            replicas: 2
+
+    result:
+        image: result
+        ports:
+            - 5001:80
+        deploy:
+            replicas: 1
+
+    worker:
+        image: worker
+        deploy:
+            replicas: 1
